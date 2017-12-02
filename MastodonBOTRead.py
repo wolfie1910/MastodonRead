@@ -22,14 +22,6 @@ do_upload = True
 if '--no-upload' in sys.argv:
     do_upload = False
 
-# Check mastostats.csv exists, if not, create it
-if not os.path.isfile("mastostats.csv"):    
-        print("mastostats.csv does not exist, creating it...")
-
-        # Create CSV header row
-        with open("mastostats.csv", "w") as myfile:
-            myfile.write("timestamp,usercount,tootscount\n")
-        myfile.close()
 
 # Returns the parameter from the specified file
 def get_parameter( parameter, file_path ):
@@ -66,5 +58,8 @@ mastodon = Mastodon(
 # Initialise access headers
 headers={ 'Authorization': 'Bearer %s'%uc_access_token }
 
-#Writing a post: status is the variable for the toot 
-Mastodon.status_post(status='I love to sp@m with my t00ts... *__*', in_reply_to_id=None, media_ids=None, sensitive=False, visibility='public', spoiler_text=None)
+#Fetch statuses, most recent ones first. Timeline can be ‘home’, ‘local’, ‘public’, or ‘tag/hashtag’. See the following functions documentation for what those do. Local hashtag timelines are supported via the timeline_hashtag() function.
+#The default timeline is the “home” timeline.
+#Returns a list of toot dicts.
+
+mastodon.timeline(timeline='home', max_id=None, since_id=None, limit=None)
